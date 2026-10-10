@@ -1,0 +1,56 @@
+#include "pch.h"
+
+#include "src/anyslider_log.h"
+#include "src/mm_io_config.h"
+#include "src/mm_game_state.h"
+#include "src/mm_io_hooks.h"
+#include "src/mm_io_window_hooks.h"
+#include "src/vid_pid_remap.h"
+
+struct IDXGISwapChain;
+
+extern "C"
+{
+// DIVA Mod Loader invokes this immediately before IDXGISwapChain::Present.
+__declspec(dllexport) void OnFrame(IDXGISwapChain*)
+{
+    anyslider::UpdateMmIoWindowHooks();
+    anyslider::UpdateMmGameState();
+}
+
+// DIVA Mod Loader invokes this from WinMain after game globals are initialized.
+__declspec(dllexport) void Init()
+{
+    static bool initialized = false;
+    if (initialized)
+    {
+        return;
+    }
+    initialized = true;
+
+    anyslider::Log("Initializing...");
+    anyslider::MmIoConfig mmIoConfig;
+    if (!anyslider::LoadMmIoConfig(mmIoConfig))
+    {
+        return;
+    }
+    if (!anyslider::InitializeVidPidRemap(
+            mmIoConfig.enabled && mmIoConfig.exclusive_controller_input))
+    {
+        anyslider::Log("VID/PID remapping is unavailable for this executable version.");
+    }
+    if (!mmIoConfig.enabled)
+    {
+        anyslider::Log("Native IO disabled by io_enabled=false.");
+        return;
+    }
+    if (!anyslider::InitializeMmIoWindowHooks(mmIoConfig))
+    {
+        anyslider::Log("MMIO window hooks are unavailable.");
+    }
+    if (!anyslider::InitializeMmIoHooks(mmIoConfig))
+    {
+        anyslider::Log("MMIO backend is unavailable for this executable version.");
+    }
+}
+}
