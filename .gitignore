@@ -3,3 +3,4 @@ dist/
 vendor/
 __pycache__/
 *.spec
+venv

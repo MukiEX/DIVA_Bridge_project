@@ -1,0 +1,26 @@
+--- ash/Dependencies/Detours/include/detours.h	2026-10-09 01:52:22.865584666 -0500
++++ asb/src/Dependencies/Detours/include/detours.h	2026-10-09 01:59:11.406768947 -0500
+@@ -94,7 +94,7 @@
+ //////////////////////////////////////////////////////////////////////////////
+ //
+ 
+-#if (_MSC_VER < 1299)
++#if (_MSC_VER < 1299) && !defined(__MINGW32__)   // [mingw build] MinGW already defines these
+ typedef LONG LONG_PTR;
+ typedef ULONG ULONG_PTR;
+ #endif
+@@ -1103,6 +1103,14 @@
+ #endif // DETOURS_INTERNAL
+ #endif // __cplusplus
+ 
++#if defined(__cplusplus) && defined(__MINGW32__)
++// [mingw build] MSVC converts function pointers to PVOID implicitly; clang needs a cast.
++template <typename F>
++inline LONG DetourAttach(PVOID *ppPointer, F pDetour) { return DetourAttach(ppPointer, reinterpret_cast<PVOID>(pDetour)); }
++template <typename F>
++inline LONG DetourDetach(PVOID *ppPointer, F pDetour) { return DetourDetach(ppPointer, reinterpret_cast<PVOID>(pDetour)); }
++#endif
++
+ #endif // _DETOURS_H_
+ //
+ ////////////////////////////////////////////////////////////////  End of File.
