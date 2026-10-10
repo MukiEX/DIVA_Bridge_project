@@ -1,0 +1,63 @@
+name: Build DIVA Bridge
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write   # needed to publish a release on version tags
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest   # Windows x64  -> DIVA Bridge.exe
+          - os: ubuntu-22.04     # Linux x64    -> diva-bridge (glibc 2.35+, incl. SteamOS 3)
+          - os: macos-14         # macOS Apple Silicon -> DIVA Bridge.app
+          - os: macos-13         # macOS Intel         -> DIVA Bridge.app
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Linux build dependencies
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y python3-tk libusb-1.0-0
+
+      - name: Install build requirements
+        run: python -m pip install --upgrade pip && python -m pip install -r requirements-build.txt
+
+      - name: Build
+        run: python build.py
+
+      - name: Smoke test (bridge starts and answers)
+        shell: bash
+        run: python ci_smoke_test.py
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: DIVA-Bridge-${{ runner.os }}-${{ runner.arch }}
+          path: dist/DIVA-Bridge-*.zip
+          if-no-files-found: error
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/*.zip
+          generate_release_notes: true

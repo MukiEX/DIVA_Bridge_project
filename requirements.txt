@@ -1,0 +1,4 @@
+# Running from source (python diva_bridge_gui.py)
+pyusb>=1.2.1
+hidapi>=0.14
+libusb-package>=1.0.26

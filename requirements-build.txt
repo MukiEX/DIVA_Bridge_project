@@ -1,0 +1,6 @@
+# Everything needed to build the single-file app (python build.py)
+pyinstaller>=6.6
+pyusb>=1.2.1
+hidapi>=0.14          # cython-hidapi: ships its own compiled hidapi
+libusb-package>=1.0.26  # ships libusb-1.0 for Windows, macOS and Linux
+pillow                # lets PyInstaller turn assets/icon.png into the macOS icon

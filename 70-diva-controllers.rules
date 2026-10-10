@@ -1,0 +1,13 @@
+# Project DIVA controllers for diva_bridge.py - access for the logged-in user.
+# Copy to /etc/udev/rules.d/, then: sudo udevadm control --reload-rules && sudo udevadm trigger
+#
+# libusb access (the default on Linux)
+SUBSYSTEM=="usb", ATTRS{idVendor}=="0e8f", ATTRS{idProduct}=="2213", MODE="0660", TAG+="uaccess"
+SUBSYSTEM=="usb", ATTRS{idVendor}=="1973", ATTRS{idProduct}=="8000", MODE="0660", TAG+="uaccess"
+SUBSYSTEM=="usb", ATTRS{idVendor}=="0f0d", ATTRS{idProduct}=="00fb", MODE="0660", TAG+="uaccess"
+SUBSYSTEM=="usb", ATTRS{idVendor}=="0f0d", ATTRS{idProduct}=="013c", MODE="0660", TAG+="uaccess"
+#
+# hidapi access (only needed if you choose "USB access: hidapi" on Linux)
+KERNEL=="hidraw*", ATTRS{idVendor}=="1973", ATTRS{idProduct}=="8000", MODE="0660", TAG+="uaccess"
+KERNEL=="hidraw*", ATTRS{idVendor}=="0f0d", ATTRS{idProduct}=="00fb", MODE="0660", TAG+="uaccess"
+KERNEL=="hidraw*", ATTRS{idVendor}=="0f0d", ATTRS{idProduct}=="013c", MODE="0660", TAG+="uaccess"
