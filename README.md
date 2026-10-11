@@ -1,6 +1,6 @@
 # DIVA Bridge GUI
 
-![GUI Example](assets/divabridgegui.jpg)
+![GUI Example](assets/divabridgegui.png)
 
 A cross-platform, networked compatibility layer for Project Diva Future Tone controllers
 
