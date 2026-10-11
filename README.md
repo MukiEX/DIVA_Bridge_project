@@ -1,5 +1,7 @@
 # DIVA Bridge GUI
 
+![GUI Example](assets/divabridgegui.jpg)
+
 A window for `diva_bridge.py`: set the listen IP and port, pick the controller,
 start/stop the server, and watch the buttons and touch slider live. The HORI
 NSW-230 / PS4-161 are drawn like the real controller; the Divaller and
