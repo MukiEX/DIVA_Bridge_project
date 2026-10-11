@@ -4,18 +4,18 @@
 
 A cross-platform, networked compatibility layer for Project Diva Future Tone controllers
 
-### Systems Supported
+## Systems Supported
 
-## Windows
+### Windows
 
 * Start up DIVA Bridge.exe
 
-## Linux
+### Linux
 
 * Start up `diva_bridge.py` in CLI or `diva_bridge_gui.py` in desktop environment
 * Optional: Set `diva_bridge.py` as a user service (instructions to come)
 
-## Mac
+### Mac
 
 * Really?
 * Divaller not supported in CFW driver mode
